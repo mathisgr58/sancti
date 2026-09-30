@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Sancti — collection des saints</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#EEF0F4; --surface:#FFFFFF; --ink:#1B2230; --muted:#667085; --line:#D5DAE3; --accent:#6B1F2A; --accent-ink:#FFFFFF;
+  --c:#7C8595; --pc:#3E8A6A; --r:#2F5FA8; --tr:#6E3FA3; --l:#B8860B;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){ --bg:#11151D; --surface:#1A202B; --ink:#E6E9EF; --muted:#9AA3B2; --line:#2B3342; --accent:#C9737F; --accent-ink:#11151D;
+    --c:#98A1B0; --pc:#6DBE98; --r:#79A6E8; --tr:#B290E0; --l:#E5B94C; }
+}
+:root[data-theme="dark"]{ --bg:#11151D; --surface:#1A202B; --ink:#E6E9EF; --muted:#9AA3B2; --line:#2B3342; --accent:#C9737F; --accent-ink:#11151D;
+  --c:#98A1B0; --pc:#6DBE98; --r:#79A6E8; --tr:#B290E0; --l:#E5B94C; }
+html{height:100%;scroll-padding-top:env(safe-area-inset-top,0px)}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;min-height:100%;background:var(--bg);color:var(--ink);font-family:"Crimson Pro",Georgia,serif;font-size:1.08rem;line-height:1.45;-webkit-font-smoothing:antialiased}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line)}
+.top{max-width:40rem;margin:0 auto;padding:.8rem 1rem .5rem;display:flex;align-items:baseline;justify-content:space-between;gap:1rem}
+h1{font-family:Cinzel,Georgia,serif;font-weight:700;font-size:1.5rem;letter-spacing:.06em;margin:0}
+.progress{font-size:.95rem;color:var(--muted)}
+nav{max-width:40rem;margin:0 auto;display:flex;padding:0 .5rem}
+nav button{flex:1;font:inherit;font-size:1rem;background:none;border:none;border-bottom:3px solid transparent;padding:.55rem .3rem;color:var(--muted);cursor:pointer}
+nav button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent);font-weight:600}
+main{max-width:40rem;margin:0 auto;padding:1.2rem 1rem 3rem}
+.hidden{display:none!important}
+.btn{font:inherit;cursor:pointer;border-radius:999px;padding:.7rem 1.4rem;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn:disabled{opacity:.4;cursor:default}
+.btn.ghost{background:transparent;color:var(--accent)}
+button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.muted{color:var(--muted)}
+/* Pack */
+.packzone{text-align:center}
+.pack{position:relative;width:12.5rem;height:17rem;margin:1rem auto;border-radius:16px;border:none;cursor:pointer;color:#F3DFA2;overflow:hidden;
+  background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.035) 0 10px,transparent 10px 20px),
+    radial-gradient(ellipse at 50% 30%,#9B2F3E 0%,#5E1622 65%,#3E0D16 100%);
+  box-shadow:0 14px 34px rgba(0,0,0,.35), inset 0 0 0 3px #C9A24A, inset 0 0 0 7px #5E1622, inset 0 0 0 8px rgba(201,162,74,.6);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.5rem;font-family:Cinzel,serif;transition:transform .15s}
+.pack::before{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.18) 45%,transparent 60%);transform:translateX(-100%);animation:shine 3.5s ease-in-out infinite}
+@keyframes shine{0%,60%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.pack .seal{width:4.6rem;height:4.6rem;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(circle at 35% 30%,#E0B85A,#A67C1F 70%);box-shadow:0 3px 8px rgba(0,0,0,.4), inset 0 0 0 3px rgba(255,255,255,.25);color:#5E1622}
+.pack .seal svg{width:1.8rem;height:2.4rem}
+.pack .t{font-size:1.45rem;letter-spacing:.18em;font-weight:700;text-shadow:0 2px 0 rgba(0,0,0,.35)}
+.pack .s{font-family:"Crimson Pro",serif;font-size:.95rem;opacity:.85;font-style:italic}
+.pack .orn{font-size:.9rem;letter-spacing:.4em;opacity:.7}
+.pack:disabled{filter:grayscale(.85);opacity:.55;cursor:default}
+.pack:disabled::before{animation:none}
+.pack.shake{animation:shake .5s ease}
+@keyframes shake{0%,100%{transform:rotate(0)}20%{transform:rotate(-4deg)}40%{transform:rotate(4deg)}60%{transform:rotate(-3deg)}80%{transform:rotate(2deg)}}
+.count{font-size:1.1rem;margin:.3rem 0}
+.timer{color:var(--muted);font-size:.95rem;min-height:1.4em}
+.reveal{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:1.2rem;perspective:800px}
+.revealhint{text-align:center;color:var(--muted);font-style:italic;min-height:1.4em;margin-top:.6rem}
+/* Card (image pieuse) */
+.card{--rc:#8A8F99;position:relative;aspect-ratio:5/7.4;border-radius:12px;padding:5px;border:none;cursor:pointer;font:inherit;color:#2A2016;text-align:center;
+  background:linear-gradient(145deg,color-mix(in srgb,var(--rc) 85%,#fff),var(--rc) 45%,color-mix(in srgb,var(--rc) 70%,#000));box-shadow:0 4px 12px rgba(0,0,0,.18)}
+.card .fr{height:100%;border-radius:8px;background:
+  radial-gradient(ellipse at 50% 0%,#FFF9EC 0%,#F4E8CF 55%,#E9D8B4 100%);display:flex;flex-direction:column;align-items:center;padding:.35rem .3rem .3rem;overflow:hidden;
+  box-shadow:inset 0 0 0 1px rgba(120,90,40,.35)}
+.card .arch{position:relative;width:86%;flex:1 1 auto;min-height:0;border-radius:999px 999px 6px 6px;display:flex;align-items:center;justify-content:center;overflow:hidden;
+  background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--rc) 35%,#FFF6DD) 0%,color-mix(in srgb,var(--rc) 60%,#3A2A12) 100%);
+  box-shadow:inset 0 0 0 2px rgba(201,162,74,.9), inset 0 0 18px rgba(0,0,0,.25)}
+.card .arch::before{content:"";position:absolute;width:62%;aspect-ratio:1;border-radius:50%;top:14%;
+  background:radial-gradient(circle,rgba(255,236,170,.95) 0%,rgba(255,220,120,.35) 55%,transparent 70%)}
+.card .rays{position:absolute;inset:-30%;background:repeating-conic-gradient(from 0deg at 50% 45%,rgba(255,240,190,.18) 0 6deg,transparent 6deg 18deg)}
+.card .emb{position:relative;font-family:Cinzel,serif;font-weight:700;font-size:clamp(1.8rem,9vw,2.6rem);line-height:1;color:#FFF3D0;text-shadow:0 2px 4px rgba(0,0,0,.45)}
+.card .arch img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 20%;opacity:0;transition:opacity .4s}
+.card .arch.hasimg img{opacity:1}
+.card .arch.hasimg .emb,.card .arch.hasimg .rays{display:none}
+.card .arch.hasimg::before{display:none}
+.card .nm{font-family:Cinzel,serif;font-weight:700;font-size:.72rem;line-height:1.15;margin-top:.35rem;letter-spacing:.02em;min-height:1.7em;display:flex;align-items:center}
+.card .sub{font-size:.7rem;color:#6B5A40;line-height:1.1}
+.card .foot{display:flex;justify-content:space-between;align-items:center;width:100%;padding:.2rem .15rem 0;font-size:.66rem;color:#5A4A33;border-top:1px solid rgba(120,90,40,.25);margin-top:.2rem}
+.card .gems{color:var(--rc);letter-spacing:-.05em;font-size:.72rem;filter:brightness(.8)}
+.card.C{--rc:#9A8A74}
+.card.PC{--rc:#3E8A6A}
+.card.R{--rc:#2F5FA8}
+.card.TR{--rc:#7A45B0}
+.card.L{--rc:#C9A24A}
+.card.L::after,.card.TR::after{content:"";position:absolute;inset:0;border-radius:12px;pointer-events:none;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.45) 47%,transparent 62%);background-size:250% 100%;animation:foil 3s linear infinite;mix-blend-mode:overlay}
+@keyframes foil{from{background-position:120% 0}to{background-position:-120% 0}}
+.card .new{position:absolute;top:-.45rem;right:-.3rem;background:#8A2A36;color:#fff;font-size:.66rem;border-radius:999px;padding:.1rem .45rem;font-weight:600;z-index:2;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.card .dup{position:absolute;top:.5rem;left:.55rem;font-size:.68rem;color:#fff;background:rgba(0,0,0,.45);border-radius:999px;padding:0 .35rem;z-index:2}
+.card.locked{cursor:default;--rc:var(--line);background:var(--line)}
+.card.locked .fr{background:var(--surface);opacity:.7}
+.card.locked .arch{background:var(--bg);box-shadow:inset 0 0 0 2px var(--line)}
+.card.locked .arch::before{display:none}
+.card.locked .emb{color:var(--muted);font-family:Cinzel,serif;font-size:1.8rem;filter:none}
+.card.locked .nm{color:var(--muted)}
+/* dos de carte */
+.back{aspect-ratio:5/7.4;border-radius:12px;border:none;cursor:pointer;color:#E7C66B;
+  background:repeating-linear-gradient(45deg,rgba(255,255,255,.04) 0 8px,transparent 8px 16px),radial-gradient(ellipse at 50% 40%,#8A2A36,#4A111B);
+  box-shadow:0 4px 12px rgba(0,0,0,.25), inset 0 0 0 3px #C9A24A, inset 0 0 0 6px #4A111B, inset 0 0 0 7px rgba(201,162,74,.6);
+  display:flex;align-items:center;justify-content:center}
+.back svg{width:1.6rem;height:2.2rem}
+.back.glowL{box-shadow:0 0 18px 4px rgba(233,190,80,.8), inset 0 0 0 3px #C9A24A, inset 0 0 0 6px #4A111B}
+.back.glowTR{box-shadow:0 0 16px 3px rgba(150,100,220,.7), inset 0 0 0 3px #C9A24A, inset 0 0 0 6px #4A111B}
+.flip{animation:flip .45s ease both}
+@keyframes flip{from{transform:rotateY(90deg)}to{transform:rotateY(0)}}
+.pop{animation:pop .35s ease both}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@media (prefers-reduced-motion: reduce){.flip,.pop,.pack.shake,.pack::before,.card::after{animation:none!important}}
+.bigcard{width:11rem;margin:0 auto 1rem}
+.bigcard .card{cursor:default}
+.bigcard .card .nm{font-size:1rem}
+.bigcard .card .sub,.bigcard .card .foot{font-size:.85rem}
+.bigcard .card .emb{font-size:4rem}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+@media (min-width:560px){.grid{grid-template-columns:repeat(4,1fr)}}
+.filters{display:flex;gap:.4rem;flex-wrap:wrap;margin-bottom:1rem}
+.chip{font:inherit;font-size:.9rem;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:.3rem .8rem;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+/* Modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:flex;align-items:flex-end;justify-content:center;z-index:20;padding:env(safe-area-inset-top,0px) 0 0}
+.sheet{background:var(--surface);width:100%;max-width:40rem;border-radius:20px 20px 0 0;padding:1.4rem 1.3rem calc(1.4rem + env(safe-area-inset-bottom,0px));max-height:85vh;overflow:auto}
+.sheet h2{font-family:Cinzel,serif;font-size:1.35rem;margin:.2rem 0 .3rem}
+.sheet .meta{color:var(--muted);font-size:.98rem;margin-bottom:.8rem}
+.sheet .quote{font-style:italic;border-left:3px solid var(--accent);padding-left:.8rem;margin:1rem 0}
+.tagrow{display:flex;flex-wrap:wrap;gap:.4rem;margin:.5rem 0}
+.tag{font-size:.85rem;border:1px solid var(--line);border-radius:999px;padding:.15rem .6rem}
+/* Combat */
+.boss{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:1.1rem;text-align:center;margin-bottom:1rem}
+.boss h2{font-family:Cinzel,serif;margin:.2rem 0;font-size:1.4rem}
+.hp{height:12px;border-radius:6px;background:var(--line);overflow:hidden;margin:.8rem 0 .3rem}
+.hp span{display:block;height:100%;background:var(--accent);transition:width .4s ease}
+.log{min-height:1.5em;margin:.6rem 0;font-style:italic}
+.fighters{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem}
+.card.used{opacity:.35;cursor:default}
+.card .bonus{position:absolute;top:-.45rem;left:-.3rem;z-index:2;background:#3E8A6A;color:#fff;font-size:.7rem;font-weight:700;border-radius:999px;padding:.1rem .45rem;box-shadow:0 2px 4px rgba(0,0,0,.3)}
+.done{text-align:center;font-family:Cinzel,serif;color:var(--l);margin:1rem 0}
+.rules summary{cursor:pointer;font-weight:600;margin-top:2rem}
+.rules{color:var(--muted)}
+.rules p{margin:.5rem 0}
+</style>
+</head>
+<body>
+<header>
+  <div class="top">
+    <h1>Sancti</h1>
+    <div class="progress" id="progress"></div>
+  </div>
+  <nav role="tablist">
+    <button role="tab" data-tab="packs" aria-selected="true">Paquets</button>
+    <button role="tab" data-tab="collection" aria-selected="false">Collection</button>
+    <button role="tab" data-tab="combat" aria-selected="false">Combat</button>
+  </nav>
+</header>
+
+<main>
+  <!-- PAQUETS -->
+  <section id="tab-packs">
+    <div class="packzone">
+      <button class="pack" id="packBtn" aria-label="Ouvrir un paquet">
+        <span class="orn">✦ ✦ ✦</span>
+        <span class="t">SANCTI</span>
+        <span class="seal"><svg viewBox="0 0 22 30" aria-hidden="true"><path d="M9 0h4v8h9v4h-9v18H9V12H0V8h9z" fill="currentColor"/></svg></span>
+        <span class="s">Touche pour ouvrir</span>
+        <span class="orn">✦ ✦ ✦</span>
+      </button>
+      <div class="count" id="packCount"></div>
+      <div class="timer" id="packTimer"></div>
+    </div>
+    <div class="reveal" id="reveal"></div>
+    <p class="revealhint" id="revealHint"></p>
+    <details class="rules">
+      <summary>Règles du jeu</summary>
+      <p>Chaque paquet contient 3 saints. Tu as jusqu'à 5 paquets ; un nouveau paquet arrive toutes les 3 minutes.</p>
+      <p>Si tu ouvres 5 paquets sans saint Rare ou mieux, le suivant en contient un à coup sûr.</p>
+      <p>Chaque jour, un péché capital t'attend dans l'onglet Combat. Chaque saint peut frapper une fois par jour. Un saint dont la vertu s'oppose au vice du jour frappe deux fois plus fort.</p>
+      <p>La rareté est un choix de jeu, pas un classement de sainteté : tous les saints sont au Ciel !</p>
+      <p>Images : Wikipédia / Wikimedia Commons.</p>
+    </details>
+  </section>
+
+  <!-- COLLECTION -->
+  <section id="tab-collection" class="hidden">
+    <div class="filters" id="filters"></div>
+    <div class="grid" id="collGrid"></div>
+    <p class="done hidden" id="complete">Regina Sanctorum omnium, ora pro nobis.</p>
+  </section>
+
+  <!-- COMBAT -->
+  <section id="tab-combat" class="hidden">
+    <div class="boss">
+      <div class="muted">Vice du jour</div>
+      <h2 id="bossName"></h2>
+      <div class="muted" id="bossCounter"></div>
+      <div class="hp"><span id="hpBar"></span></div>
+      <div id="hpText" class="muted"></div>
+      <p class="log" id="log"></p>
+    </div>
+    <p class="muted" id="combatHint">Choisis tes saints : chacun peut frapper une fois aujourd'hui.</p>
+    <div class="fighters" id="fighters"></div>
+  </section>
+</main>
+
+<div class="modal hidden" id="modal" role="dialog" aria-modal="true">
+  <div class="sheet" id="sheet"></div>
+</div>
+
+<script>
+/* ------------ DONNÉES ------------ */
+const RAR = {C:{n:"Commune",w:40,dmg:10},PC:{n:"Peu commune",w:30,dmg:15},R:{n:"Rare",w:20,dmg:25},TR:{n:"Très rare",w:8,dmg:40},L:{n:"Légendaire",w:2,dmg:60}};
+const RORDER=["L","TR","R","PC","C"];
+const VICES=[ // index = jour de la semaine (0 = dimanche)
+  {v:"Orgueil",c:"Humilité"},{v:"Paresse",c:"Zèle"},{v:"Colère",c:"Douceur"},{v:"Envie",c:"Charité"},
+  {v:"Avarice",c:"Générosité"},{v:"Gourmandise",c:"Tempérance"},{v:"Luxure",c:"Chasteté"}];
+const S=[
+ {id:"michel",n:"Saint Michel",cat:"Archange",r:"L",vt:"Humilité",f:"29 septembre",p:"Protecteur de l'Église, patron secondaire de la France",l:"Prince de la milice céleste, il a combattu Satan et ses anges (Ap 12). Son nom signifie « Qui est comme Dieu ? ».",q:"Quis ut Deus ?"},
+ {id:"joseph",n:"Saint Joseph",cat:"Confesseur",r:"L",vt:"Chasteté",f:"19 mars",p:"Patron de l'Église universelle, des pères, des travailleurs et de la bonne mort",l:"Époux de la Vierge Marie et père nourricier de Jésus, charpentier à Nazareth. L'Évangile ne rapporte aucune de ses paroles.",q:"Ite ad Joseph. — Allez à Joseph (Gn 41, 55)"},
+ {id:"pierre",n:"Saint Pierre",cat:"Apôtre",r:"TR",vt:"Charité",f:"29 juin",p:"Patron des papes et des pêcheurs",l:"Pêcheur de Galilée choisi par le Christ comme chef des Apôtres. Il L'a renié trois fois, puis est mort crucifié à Rome, la tête en bas selon la tradition.",q:"Seigneur, à qui irions-nous ? Tu as les paroles de la vie éternelle. (Jn 6, 68)"},
+ {id:"paul",n:"Saint Paul",cat:"Apôtre",r:"TR",vt:"Zèle",f:"30 juin",p:"Patron des missionnaires",l:"Persécuteur des chrétiens converti sur le chemin de Damas, il devint l'Apôtre des nations. Il fut décapité à Rome.",q:"Pour moi, vivre, c'est le Christ. (Ph 1, 21)"},
+ {id:"jeanbaptiste",n:"Saint Jean-Baptiste",cat:"Précurseur",r:"TR",vt:"Tempérance",f:"24 juin",p:"Patron du Canada français",l:"Le Précurseur, qui baptisa Jésus dans le Jourdain. Il vivait au désert, vêtu de poil de chameau, nourri de sauterelles et de miel sauvage.",q:"Il faut qu'il croisse et que je diminue. (Jn 3, 30)"},
+ {id:"augustin",n:"Saint Augustin",cat:"Docteur",r:"TR",vt:"Chasteté",f:"28 août",p:"Patron des théologiens",l:"Après une jeunesse désordonnée, il se convertit grâce aux prières de sa mère, sainte Monique. Évêque d'Hippone, il est l'un des plus grands docteurs de l'Église.",q:"Tu nous as faits pour Toi, Seigneur, et notre cœur est sans repos tant qu'il ne repose en Toi."},
+ {id:"thomas",n:"Saint Thomas d'Aquin",cat:"Docteur",r:"TR",vt:"Humilité",f:"7 mars",p:"Patron des étudiants et des universités catholiques",l:"Dominicain surnommé le Docteur angélique, auteur de la Somme théologique et de l'office du Saint-Sacrement.",q:"Non nisi Te, Domine. — Rien que Toi, Seigneur."},
+ {id:"jean",n:"Saint Jean",cat:"Apôtre",r:"R",vt:"Charité",f:"27 décembre",p:"Patron des théologiens",l:"Le disciple que Jésus aimait, seul apôtre au pied de la Croix, où il reçut Marie pour mère. Auteur d'un Évangile, de trois épîtres et de l'Apocalypse.",q:"Dieu est amour. (1 Jn 4, 8)"},
+ {id:"dominique",n:"Saint Dominique",cat:"Confesseur",r:"R",vt:"Zèle",f:"4 août",p:"Patron des astronomes",l:"Fondateur de l'Ordre des Prêcheurs. On disait de lui qu'il ne parlait qu'avec Dieu ou de Dieu. La tradition lui attribue la diffusion du Rosaire.",q:"Contemplari et contemplata aliis tradere. — Devise de l'Ordre"},
+ {id:"francois",n:"Saint François d'Assise",cat:"Confesseur",r:"R",vt:"Générosité",f:"4 octobre",p:"Patron de l'Italie",l:"Fils d'un riche marchand, il renonça à tout pour épouser « Dame Pauvreté ». Il reçut les stigmates sur le mont Alverne.",q:"Deus meus et omnia. — Mon Dieu et mon tout."},
+ {id:"therese",n:"Sainte Thérèse de l'Enfant-Jésus",cat:"Vierge",r:"R",vt:"Humilité",f:"3 octobre",p:"Patronne des missions, patronne secondaire de la France",l:"Carmélite de Lisieux, morte à 24 ans. Sa « petite voie » d'enfance spirituelle a touché le monde entier.",q:"Je veux passer mon Ciel à faire du bien sur la terre."},
+ {id:"jeanne",n:"Sainte Jeanne d'Arc",cat:"Vierge",r:"R",vt:"Zèle",f:"30 mai (propre de France)",p:"Patronne secondaire de la France",l:"Jeune fille de Domrémy appelée par des voix à délivrer la France. Elle fit sacrer Charles VII à Reims, puis mourut sur le bûcher à Rouen, à 19 ans.",q:"Messire Dieu premier servi."},
+ {id:"benoit",n:"Saint Benoît",cat:"Abbé",r:"R",vt:"Zèle",f:"21 mars",p:"Patron de l'Europe",l:"Père du monachisme d'Occident et fondateur du Mont-Cassin. Sa Règle a formé des générations de moines.",q:"Ne rien préférer à l'amour du Christ. (Règle, ch. 4)"},
+ {id:"bosco",n:"Saint Jean Bosco",cat:"Confesseur",r:"R",vt:"Douceur",f:"31 janvier",p:"Patron de la jeunesse, des éditeurs et des illusionnistes",l:"Prêtre de Turin, il consacra sa vie aux jeunes abandonnés et fonda les Salésiens. Il les menait à Dieu par la joie.",q:"Da mihi animas, cetera tolle. — Donne-moi des âmes, prends tout le reste."},
+ {id:"piex",n:"Saint Pie X",cat:"Pontife",r:"R",vt:"Zèle",f:"3 septembre",p:"Patron des premiers communiants",l:"Pape de 1903 à 1914, il combattit le modernisme et ouvrit la communion aux jeunes enfants.",q:"Instaurare omnia in Christo. — Tout restaurer dans le Christ."},
+ {id:"agnes",n:"Sainte Agnès",cat:"Vierge et martyre",r:"R",vt:"Chasteté",f:"21 janvier",p:"Patronne des jeunes filles",l:"Jeune Romaine martyrisée vers 12 ou 13 ans pour être restée fidèle à sa consécration au Christ.",q:""},
+ {id:"etienne",n:"Saint Étienne",cat:"Martyr",r:"PC",vt:"Douceur",f:"26 décembre",p:"Patron des diacres",l:"Diacre et premier martyr, lapidé à Jérusalem en priant pour ses bourreaux.",q:"Seigneur, ne leur impute pas ce péché. (Ac 7, 60)"},
+ {id:"laurent",n:"Saint Laurent",cat:"Martyr",r:"PC",vt:"Générosité",f:"10 août",p:"Patron des diacres et des cuisiniers",l:"Diacre de Rome martyrisé sur un gril en 258. Sommé de livrer les trésors de l'Église, il présenta les pauvres.",q:"Voici les trésors de l'Église. (selon la tradition)"},
+ {id:"martin",n:"Saint Martin",cat:"Pontife",r:"PC",vt:"Générosité",f:"11 novembre",p:"Patron des soldats",l:"Soldat romain qui partagea son manteau avec un pauvre à Amiens, puis évêque de Tours et évangélisateur de la Gaule.",q:""},
+ {id:"gregoire",n:"Saint Grégoire le Grand",cat:"Docteur",r:"PC",vt:"Humilité",f:"12 mars",p:"Patron des musiciens et des chantres",l:"Pape de 590 à 604, il envoya des missionnaires en Angleterre. Le chant grégorien porte son nom.",q:"Servus servorum Dei. — Serviteur des serviteurs de Dieu."},
+ {id:"vianney",n:"Saint Jean-Marie Vianney",cat:"Confesseur",r:"PC",vt:"Tempérance",f:"8 août",p:"Patron des curés",l:"Curé d'Ars pendant plus de quarante ans, il passait des journées entières au confessionnal.",q:"Le sacerdoce, c'est l'amour du cœur de Jésus."},
+ {id:"monique",n:"Sainte Monique",cat:"Sainte femme",r:"PC",vt:"Douceur",f:"4 mai",p:"Patronne des mères",l:"Mère de saint Augustin, elle pria pendant de longues années pour sa conversion, et fut exaucée.",q:""},
+ {id:"gonzague",n:"Saint Louis de Gonzague",cat:"Confesseur",r:"PC",vt:"Chasteté",f:"21 juin",p:"Patron de la jeunesse",l:"Fils de prince, il renonça à son héritage pour entrer chez les Jésuites. Il mourut à 23 ans après avoir soigné des malades de la peste.",q:""},
+ {id:"cecile",n:"Sainte Cécile",cat:"Vierge et martyre",r:"PC",vt:"Chasteté",f:"22 novembre",p:"Patronne des musiciens",l:"Vierge et martyre romaine. La tradition rapporte qu'elle chantait à Dieu dans son cœur le jour de ses noces.",q:""},
+ {id:"fsales",n:"Saint François de Sales",cat:"Docteur",r:"PC",vt:"Douceur",f:"29 janvier",p:"Patron des journalistes et des écrivains",l:"Évêque de Genève, auteur de l'Introduction à la vie dévote. Par sa douceur, il ramena à l'Église une grande partie du Chablais.",q:"On prend plus de mouches avec une cuillerée de miel qu'avec un tonneau de vinaigre."},
+ {id:"nicolas",n:"Saint Nicolas",cat:"Pontife",r:"C",vt:"Générosité",f:"6 décembre",p:"Patron des enfants, des marins et de la Lorraine",l:"Évêque de Myre au IVe siècle. Selon la tradition, il donna en secret une dot à trois jeunes filles pauvres.",q:""},
+ {id:"remi",n:"Saint Remi",cat:"Pontife",r:"C",vt:"Humilité",f:"1er octobre",p:"Apôtre des Francs",l:"Évêque de Reims, il baptisa Clovis vers 496 et ouvrit la conversion des Francs.",q:"Courbe la tête, fier Sicambre… (selon Grégoire de Tours)"},
+ {id:"vincent",n:"Saint Vincent de Paul",cat:"Confesseur",r:"C",vt:"Charité",f:"19 juillet",p:"Patron des œuvres de charité",l:"Prêtre, fondateur des Lazaristes et, avec sainte Louise de Marillac, des Filles de la Charité.",q:""},
+ {id:"borromee",n:"Saint Charles Borromée",cat:"Pontife",r:"C",vt:"Tempérance",f:"4 novembre",p:"Patron des séminaires et des catéchistes",l:"Archevêque de Milan, grand artisan de la réforme après le concile de Trente. Il soigna lui-même les malades de la peste.",q:""}
+];
+const EMB={michel:"⚔️",joseph:"🪚",pierre:"🗝️",paul:"📜",jeanbaptiste:"💧",augustin:"❤️‍🔥",thomas:"☀️",jean:"🦅",dominique:"📿",francois:"🐦",therese:"🌹",jeanne:"⚜️",benoit:"📖",bosco:"🤹",piex:"🛡️",agnes:"🐑",etienne:"🪨",laurent:"🔥",martin:"🧥",gregoire:"🎶",vianney:"⛪",monique:"🙏",gonzague:"🕊️",cecile:"🎻",fsales:"✒️",nicolas:"🎁",remi:"🏺",vincent:"🍞",borromee:"🕯️"};
+const SHORT={therese:"Ste Thérèse",vianney:"St Curé d'Ars",gonzague:"St Louis de Gonzague",jeanbaptiste:"St Jean-Baptiste",fsales:"St François de Sales",francois:"St François d'Assise",borromee:"St Charles Borromée",gregoire:"St Grégoire le Grand"};
+const short=s=>SHORT[s.id]||s.n.replace(/^Saint /,"St ").replace(/^Sainte /,"Ste ");
+const shortFeast=f=>f.replace(/ \(.*\)/,"").replace("janvier","janv.").replace("février","févr.").replace("septembre","sept.").replace("octobre","oct.").replace("novembre","nov.").replace("décembre","déc.").replace("juillet","juil.");
+const GEMS={C:1,PC:2,R:3,TR:4,L:5};
+const WIKI={michel:"Michel (archange)",joseph:"Joseph (père de Jésus)",pierre:"Pierre (apôtre)",paul:"Paul de Tarse",jeanbaptiste:"Jean le Baptiste",augustin:"Augustin d'Hippone",thomas:"Thomas d'Aquin",jean:"Jean (apôtre)",dominique:"Dominique de Guzmán",francois:"François d'Assise",therese:"Thérèse de Lisieux",jeanne:"Jeanne d'Arc",benoit:"Benoît de Nursie",bosco:"Jean Bosco",piex:"Pie X",agnes:"Agnès de Rome",etienne:"Étienne (protomartyr)",laurent:"Laurent de Rome",martin:"Martin de Tours",gregoire:"Grégoire Ier",vianney:"Jean-Marie Vianney",monique:"Monique d'Hippone",gonzague:"Louis de Gonzague",cecile:"Cécile de Rome",fsales:"François de Sales",nicolas:"Nicolas de Myre",remi:"Remi de Reims",vincent:"Vincent de Paul",borromee:"Charles Borromée"};
+/* Images : récupérées sur Wikipédia (fonctionne une fois le jeu hébergé, ex. GitHub Pages) */
+const IMGKEY="sancti-img-v1"; let IMG={};
+try{IMG=JSON.parse(localStorage.getItem(IMGKEY)||"{}");}catch(e){IMG={};}
+async function loadImages(){
+  const missing=S.filter(s=>!IMG[s.id]);
+  if(!missing.length) return;
+  try{
+    const titles=missing.map(s=>WIKI[s.id]).join("|");
+    const url="https://fr.wikipedia.org/w/api.php?action=query&format=json&origin=*&redirects=1&prop=pageimages&piprop=thumbnail&pithumbsize=500&titles="+encodeURIComponent(titles);
+    const r=await fetch(url); const j=await r.json(); const q=j.query||{};
+    const map={}; (q.normalized||[]).forEach(n=>map[n.from]=n.to); const red={}; (q.redirects||[]).forEach(n=>red[n.from]=n.to);
+    const byTitle={}; Object.values(q.pages||{}).forEach(pg=>{if(pg.thumbnail) byTitle[pg.title]=pg.thumbnail.source;});
+    missing.forEach(s=>{let t=WIKI[s.id]; t=map[t]||t; t=red[t]||t; if(byTitle[t]) IMG[s.id]=byTitle[t];});
+    // repli : recherche pour ceux qui manquent encore
+    for(const s of S.filter(x=>!IMG[x.id])){
+      try{const u="https://fr.wikipedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrlimit=1&prop=pageimages&piprop=thumbnail&pithumbsize=500&gsrsearch="+encodeURIComponent(s.n);
+        const jj=await (await fetch(u)).json(); const pg=Object.values((jj.query||{}).pages||{})[0]; if(pg&&pg.thumbnail) IMG[s.id]=pg.thumbnail.source;}catch(e){}
+    }
+    try{localStorage.setItem(IMGKEY,JSON.stringify(IMG));}catch(e){}
+    renderAll(); const rv=$("reveal"); rv.querySelectorAll(".card").forEach(c=>{const id=c.dataset.id; if(id&&IMG[id]) setImg(c,id);});
+  }catch(e){/* hors ligne ou page non hébergée : on garde le monogramme */}
+}
+function setImg(card,id){const a=card.querySelector(".arch"); if(!a||a.querySelector("img")) return;
+  const im=new Image(); im.alt=""; im.loading="lazy"; im.src=IMG[id]; im.onload=()=>a.classList.add("hasimg"); im.onerror=()=>im.remove(); a.appendChild(im);}
+const BYID=Object.fromEntries(S.map(s=>[s.id,s]));
+
+/* ------------ ÉTAT ------------ */
+const KEY="sancti-v1", MAXP=5, REGEN=3*60*1000, PITY=5, HPMAX=200;
+let st={packs:MAXP,last:Date.now(),owned:{},seen:{},dry:0,boss:{day:"",hp:HPMAX,used:[]}};
+try{const s=localStorage.getItem(KEY); if(s){const p=JSON.parse(s); st=Object.assign(st,p);}}catch(e){}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+function dayKey(){const d=new Date();return d.getFullYear()+"-"+(d.getMonth()+1)+"-"+d.getDate();}
+function regen(){
+  if(st.packs>=MAXP){st.last=Date.now();return;}
+  const n=Math.floor((Date.now()-st.last)/REGEN);
+  if(n>0){st.packs=Math.min(MAXP,st.packs+n); st.last+=n*REGEN; if(st.packs>=MAXP) st.last=Date.now(); save();}
+}
+const $=id=>document.getElementById(id);
+const initials=n=>n.replace(/^(Saint|Sainte)\s+/,"").charAt(0);
+
+/* ------------ TIRAGE ------------ */
+function rollRarity(forceRare){
+  const pool=forceRare?["R","TR","L"]:RORDER;
+  const tot=pool.reduce((a,k)=>a+RAR[k].w,0); let x=Math.random()*tot;
+  for(const k of pool){x-=RAR[k].w; if(x<=0) return k;} return pool[pool.length-1];
+}
+function pickSaint(r){const list=S.filter(s=>s.r===r);return list[Math.floor(Math.random()*list.length)];}
+function openPack(){
+  regen(); if(st.packs<=0) return;
+  st.packs--; if(st.packs===MAXP-1) st.last=Date.now();
+  const force=st.dry>=PITY; const cards=[]; let gotRare=false;
+  for(let i=0;i<3;i++){
+    const r=rollRarity(force&&i===2&&!gotRare);
+    const s=pickSaint(r); if(["R","TR","L"].includes(r)) gotRare=true;
+    const isNew=!st.owned[s.id]; st.owned[s.id]=(st.owned[s.id]||0)+1; cards.push({s,isNew});
+  }
+  st.dry=gotRare?0:st.dry+1; save();
+  const pb=$("packBtn"); pb.classList.remove("shake"); void pb.offsetWidth; pb.classList.add("shake");
+  const rv=$("reveal"); rv.innerHTML=""; let flipped=0;
+  $("revealHint").textContent="Touche les cartes pour les retourner";
+  setTimeout(()=>{
+    cards.forEach((c,i)=>{
+      const back=backEl(); back.style.animationDelay=(i*.12)+"s";
+      if(c.s.r==="L") back.classList.add("glowL"); else if(c.s.r==="TR") back.classList.add("glowTR");
+      back.onclick=()=>{const el=cardEl(c.s,{isNew:c.isNew}); el.classList.add("flip"); back.replaceWith(el);
+        flipped++; if(flipped===3) $("revealHint").textContent=cards.some(x=>x.isNew)?"Nouveaux saints dans ta collection !":"Déjà dans ta collection.";};
+      rv.appendChild(back);
+    });
+  },450);
+  renderAll();
+}
+
+/* ------------ RENDU ------------ */
+function cardEl(s,o={}){
+  const b=document.createElement(o.div?"div":"button"); if(!o.div) b.type="button"; b.className="card "+s.r;
+  b.innerHTML=`<div class="fr"><div class="arch"><div class="rays"></div><span class="emb"></span></div><div class="nm"></div><div class="sub"></div><div class="foot"><span class="vt"></span><span class="gems"></span></div></div>`;
+  b.querySelector(".emb").textContent=initials(s.n); b.dataset.id=s.id; if(IMG[s.id]) setImg(b,s.id);
+  b.querySelector(".nm").textContent=short(s);
+  b.querySelector(".sub").textContent=s.cat+" · "+shortFeast(s.f);
+  b.querySelector(".vt").textContent=s.vt;
+  b.querySelector(".gems").textContent="◆".repeat(GEMS[s.r]);
+  b.setAttribute("aria-label",`${s.n}, ${RAR[s.r].n}, vertu ${s.vt}`);
+  if(o.isNew){const n=document.createElement("span");n.className="new";n.textContent="Nouveau";b.appendChild(n);}
+  if(o.dup&&o.dup>1){const d=document.createElement("span");d.className="dup";d.textContent="×"+o.dup;b.appendChild(d);}
+  if(!o.noOpen&&!o.div) b.onclick=()=>openDetail(s);
+  return b;
+}
+function lockedEl(){const d=document.createElement("div");d.className="card locked";d.innerHTML='<div class="fr"><div class="arch"><span class="emb">?</span></div><div class="nm">À découvrir</div></div>';return d;}
+function backEl(){const b=document.createElement("button");b.type="button";b.className="back pop";b.setAttribute("aria-label","Retourner la carte");
+  b.innerHTML='<svg viewBox="0 0 22 30" aria-hidden="true"><path d="M9 0h4v8h9v4h-9v18H9V12H0V8h9z" fill="currentColor"/></svg>';return b;}
+function openDetail(s){
+  const sh=$("sheet"); sh.innerHTML="";
+  const big=document.createElement("div"); big.className="bigcard"; big.appendChild(cardEl(s,{div:true}));
+  const h=document.createElement("h2"); h.textContent=s.n; sh.appendChild(big);
+  const m=document.createElement("div"); m.className="meta"; m.textContent=`${s.cat} · fête le ${s.f}`;
+  const tr=document.createElement("div"); tr.className="tagrow";
+  [RAR[s.r].n,"Vertu : "+s.vt].forEach(t=>{const x=document.createElement("span");x.className="tag";x.textContent=t;tr.appendChild(x);});
+  const l=document.createElement("p"); l.textContent=s.l;
+  const p=document.createElement("p"); p.className="muted"; p.textContent=s.p;
+  sh.append(h,m,tr,l,p);
+  if(s.q){const q=document.createElement("p");q.className="quote";q.textContent=s.q;sh.appendChild(q);}
+  const pr=document.createElement("p"); pr.innerHTML=`<em>${s.n}, priez pour nous.</em>`; pr.className="muted";
+  const c=document.createElement("button"); c.className="btn ghost"; c.textContent="Fermer"; c.onclick=closeModal;
+  sh.append(pr,c); $("modal").classList.remove("hidden"); c.focus();
+}
+function closeModal(){$("modal").classList.add("hidden");}
+$("modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+
+let filter="Tous";
+function renderCollection(){
+  const cats=["Tous",...new Set(S.map(s=>s.vt))];
+  const f=$("filters"); f.innerHTML="";
+  cats.forEach(c=>{const b=document.createElement("button");b.className="chip";b.textContent=c;b.setAttribute("aria-pressed",c===filter);b.onclick=()=>{filter=c;renderCollection();};f.appendChild(b);});
+  const g=$("collGrid"); g.innerHTML="";
+  const list=S.filter(s=>filter==="Tous"||s.vt===filter).sort((a,b)=>RORDER.indexOf(a.r)-RORDER.indexOf(b.r));
+  list.forEach(s=>g.appendChild(st.owned[s.id]?cardEl(s,{dup:st.owned[s.id]}):lockedEl()));
+  const have=Object.keys(st.owned).length; $("complete").classList.toggle("hidden",have<S.length);
+}
+function renderPacks(){
+  regen(); $("packCount").textContent=`${st.packs} / ${MAXP} paquets`;
+  $("packBtn").disabled=st.packs<=0;
+}
+function tick(){
+  regen();
+  if(st.packs<MAXP){const left=REGEN-(Date.now()-st.last);const m=Math.floor(left/60000),s=Math.floor(left%60000/1000);
+    $("packTimer").textContent=`Prochain paquet dans ${m}:${String(s).padStart(2,"0")}`;}
+  else $("packTimer").textContent="Paquets pleins";
+  renderPacks();
+}
+function renderCombat(){
+  const today=dayKey(); if(st.boss.day!==today){st.boss={day:today,hp:HPMAX,used:[]};save();}
+  const vice=VICES[new Date().getDay()];
+  $("bossName").textContent=vice.v; $("bossCounter").textContent=`Vertu contraire : ${vice.c} (dégâts ×2)`;
+  $("hpBar").style.width=(st.boss.hp/HPMAX*100)+"%"; $("hpText").textContent=st.boss.hp>0?`${st.boss.hp} / ${HPMAX}`:"Vaincu !";
+  const fg=$("fighters"); fg.innerHTML="";
+  const mine=S.filter(s=>st.owned[s.id]).sort((a,b)=>(b.vt===vice.c)-(a.vt===vice.c)||RORDER.indexOf(a.r)-RORDER.indexOf(b.r));
+  if(!mine.length){fg.innerHTML='<p class="muted">Ouvre d\'abord un paquet pour recruter tes premiers saints.</p>';return;}
+  mine.forEach(s=>{
+    const el=cardEl(s,{noOpen:true}); const used=st.boss.used.includes(s.id);
+    if(s.vt===vice.c){const b=document.createElement("div");b.className="bonus";b.textContent="×2";el.appendChild(b);}
+    if(used||st.boss.hp<=0) el.classList.add("used");
+    else el.onclick=()=>attack(s,vice);
+    fg.appendChild(el);
+  });
+}
+function attack(s,vice){
+  let d=RAR[s.r].dmg; const x2=s.vt===vice.c; if(x2)d*=2;
+  st.boss.hp=Math.max(0,st.boss.hp-d); st.boss.used.push(s.id);
+  let msg=`${s.n} combat ${vice.v.toLowerCase()} : −${d}${x2?" (vertu contraire !)":""}`;
+  if(st.boss.hp===0){st.packs=Math.min(MAXP,st.packs+3); msg=`${vice.v} est vaincu ! +3 paquets. Deo gratias !`;}
+  save(); $("log").textContent=msg; renderAll();
+}
+function renderAll(){
+  $("progress").textContent=`${Object.keys(st.owned).length} / ${S.length} saints`;
+  renderPacks(); renderCollection(); renderCombat();
+}
+document.querySelectorAll("nav button").forEach(b=>b.onclick=()=>{
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));
+  ["packs","collection","combat"].forEach(t=>$("tab-"+t).classList.toggle("hidden",t!==b.dataset.tab));
+  window.scrollTo(0,0);
+});
+$("packBtn").onclick=openPack;
+renderAll(); tick(); setInterval(tick,1000); loadImages();
+</script>
+</body>
+</html>
